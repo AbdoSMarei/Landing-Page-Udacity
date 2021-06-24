@@ -17,6 +17,7 @@
  * Define Global Variables
  * 
 */
+// define global variables
 const sections = document.querySelectorAll('section'),
       fragment = document.createDocumentFragment(),
       navBarList = document.getElementById('navbar__list'), 
@@ -29,10 +30,13 @@ const sections = document.querySelectorAll('section'),
  * 
 */
 
+// go to top smoothly when click on the icon top
 toTop.addEventListener("click", () => {
     document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
   });
-let isScrolling;
+
+// disappear the header (navBar) after 8 sec and appear again when scroll
+let isScrolling;   
 document.onscroll = () => {
   header.style.display = "block"
   clearTimeout(isScrolling)
@@ -40,10 +44,12 @@ document.onscroll = () => {
     header.style.display = "none";
   }, 4000);
 
-  window.scrollY > 450
+// appear the top icon when scroll down after 450px
+  window.scrollY > 450    
     ? (toTop.style.display = "block")
     : (toTop.style.display = "none");
 };
+
 /**
  * End Helper Functions
  * Begin Main Functions
@@ -64,48 +70,40 @@ sections.forEach((section) => {
                 block:'center',
             });
         }); 
+
         link.setAttribute('id',section.id); 
         link.setAttribute('class','menu__link');  
         link.appendChild(aText);
         li.appendChild(link);
         fragment.appendChild(li);
 
+
 // Scroll to anchor ID using scrollTO event
 // Set sections as active
-const observer = new IntersectionObserver(
-        function active(inputs) {
-            inputs.forEach((input) => {
-                if(input.isIntersecting) {
-                    input.target.classList.add('your-active-class');
-                    link.classList.add('active');
-                    // location.hash = `${input.target.id}`;
-                }
-                else {
-                    input.target.classList.remove('your-active-class');
-                    link.classList.remove('active');
-                }
-            });
-        },
-        {//option   
-            root: null,
-            rootMargin:"-230px",
-            threshold: 0.15
+// using intersection to hold the active link & section
+const observer = new IntersectionObserver(function (entries, observer) {
+    entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+            entry.target.classList.add("your-active-class");
+            link.classList.add('active');
         }
-    );
+        else {
+            entry.target.classList.remove("your-active-class");
+            link.classList.remove('active');
+        }
+    })
+ }, {
+        root : null,
+        rootMargin:'-7px 50px -7px 30px',
+        threshold: 0.5,
+    })
     observer.observe(section);
-});
-navBarList.appendChild(fragment);
+})
+navBarList.appendChild(fragment);  // append fragment to navBar
 
 /**
  * End Main Functions
  * Begin Events
  * 
 */
-
-
-
-
-
-
-
-
